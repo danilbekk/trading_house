@@ -6,6 +6,19 @@
   "scripts": {
     "start": "nodemon index.js"
   },
+  "eslintConfig": {
+    "extends": [
+      "airbnb",
+      "prettier"
+    ],
+    "rules": {
+      "no-console": "off",
+      "no-unused-vars": "warn"
+    }
+  },
+  "prettier": {
+    "singleQuote": true
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -13,10 +26,14 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
-    "mongoose": "^5.13.0"
+    "mongoose": "^5.13.0",
+    "morgan": "^1.10.0"
   },
   "devDependencies": {
     "concurrently": "^6.2.0",
+    "eslint": "^7.30.0",
+    "eslint-config-airbnb": "^18.2.1",
+    "eslint-config-prettier": "^8.3.0",
     "nodemon": "^2.0.9"
   }
 }
