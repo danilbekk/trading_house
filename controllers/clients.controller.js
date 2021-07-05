@@ -1,8 +1,30 @@
+const httpStatus = require('http-status')
 const Client = require('../models/Client.model');
 
 module.exports.clientsController = {
   createClient: async (req, res) => {
     const { firstname, lastname, patronymic, avatar, room } = req.body;
+    if (!firstname) {
+      return res.status(httpStatus.BAD_REQUEST).json({
+        error: 'Необходимо указать имя нового клиента',
+      });
+    }
+    if (!lastname) {
+      return res.status(httpStatus.BAD_REQUEST).json({
+        error: 'Необходимо указать фамилию нового клиента',
+      });
+    }
+    if (!patronymic) {
+      return res.status(httpStatus.BAD_REQUEST).json({
+        error: 'Необходимо указать отчество нового клиента',
+      });
+    }
+    if (!room) {
+      return res.status(httpStatus.BAD_REQUEST).json({
+        error: 'Необходимо указать помещение нового клиента',
+      });
+    }
+
     try {
       const client = await new Client({
         firstname,
@@ -11,10 +33,11 @@ module.exports.clientsController = {
         avatar,
         room,
       });
+
       await client.save();
-      res.json(client);
+      return res.json(client);
     } catch (e) {
-      console.log(e.message);
+      return res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: e.message });
     }
   },
 
@@ -68,6 +91,12 @@ module.exports.clientsController = {
     try {
       const client = await Client.findById(id);
 
+      if (!client) {
+        return res.status(httpStatus.BAD_REQUEST).json({
+          error: 'Клиент с таким ID не найден',
+        });
+      }
+
       return res.json(client);
     } catch (e) {
       return res.status(400).json({ error: e.message });
@@ -81,14 +110,14 @@ module.exports.clientsController = {
 
       if (!client) {
         return res.json({
-          message: 'Не удалось удалить клиента. Eкажите верный ID',
+          message: 'Не удалось удалить клиента. Укажите верный ID',
         });
       }
       return res.json({
         message: 'Клиент успешно удален',
       });
     } catch (e) {
-      return res.status(400).json({ error: e.message });
+      return res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: e.message });
     }
   },
   editClient: async (req, res) => {
@@ -109,7 +138,7 @@ module.exports.clientsController = {
       );
       return res.json(client);
     } catch (e) {
-      return res.status(400).json({
+      return res.status(httpStatus.SERVICE_UNAVAILABLE).json({
         error: e.message,
       });
     }

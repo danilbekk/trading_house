@@ -1,3 +1,4 @@
+const httpStatus = require('http-status');
 const Note = require('../models/Note.model');
 
 module.exports.notesController = {
@@ -7,15 +8,19 @@ module.exports.notesController = {
 
       return res.json(note);
     } catch (e) {
-      return res.status(400).json({
+      return res.status(httpStatus.SERVICE_UNAVAILABLE).json({
         error: e.message,
       });
     }
   },
 
   createNote: async (req, res) => {
-    const { client, status } = req.params;
-    const { text } = req.body;
+    const { text, client, status } = req.body;
+    if (!status) {
+      return res.status(httpStatus.BAD_REQUEST).json({
+        error: 'Необходимо выбрать статус клиента',
+      });
+    }
     try {
       const note = await new Note({ text, client, status });
 
@@ -25,7 +30,7 @@ module.exports.notesController = {
         message: 'Запись успешно добавлена',
       });
     } catch (e) {
-      return res.status(400).json({
+      return res.status(httpStatus.SERVICE_UNAVAILABLE).json({
         error: e.message,
       });
     }
@@ -45,7 +50,9 @@ module.exports.notesController = {
         message: 'Запись успешно удалена',
       });
     } catch (e) {
-      return res.status(400).json({ error: e.message });
+      return res
+        .status(httpStatus.SERVICE_UNAVAILABLE)
+        .json({ error: e.message });
     }
   },
 
@@ -56,7 +63,7 @@ module.exports.notesController = {
       const note = await Note.findByIdAndUpdate(id, { text }, { new: true });
       return res.json(note);
     } catch (e) {
-      return res.status(400).json({
+      return res.status(httpStatus.SERVICE_UNAVAILABLE).json({
         error: e.message,
       });
     }
