@@ -1,7 +1,7 @@
 const httpStatus = require('http-status');
 const Status = require('../models/Status.model');
 
-module.exports.statusController = {
+module.exports.statusesController = {
   getAll: async (req, res) => {
     try {
       const status = await Status.find();

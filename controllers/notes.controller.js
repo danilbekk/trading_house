@@ -15,7 +15,8 @@ module.exports.notesController = {
   },
 
   createNote: async (req, res) => {
-    const { text, client, status } = req.body;
+    const { client } = req.params;
+    const { text, status } = req.body;
     if (!status) {
       return res.status(httpStatus.BAD_REQUEST).json({
         error: 'Необходимо выбрать статус клиента',
@@ -26,9 +27,7 @@ module.exports.notesController = {
 
       await note.save();
 
-      return res.json({
-        message: 'Запись успешно добавлена',
-      });
+      return res.json(note);
     } catch (e) {
       return res.status(httpStatus.SERVICE_UNAVAILABLE).json({
         error: e.message,
@@ -58,9 +57,13 @@ module.exports.notesController = {
 
   editNote: async (req, res) => {
     const { id } = req.params;
-    const { text } = req.body;
+    const { text, status } = req.body;
     try {
-      const note = await Note.findByIdAndUpdate(id, { text }, { new: true });
+      const note = await Note.findByIdAndUpdate(
+        id,
+        { text, status },
+        { new: true }
+      );
       return res.json(note);
     } catch (e) {
       return res.status(httpStatus.SERVICE_UNAVAILABLE).json({

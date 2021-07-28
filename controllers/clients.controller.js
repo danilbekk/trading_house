@@ -1,4 +1,4 @@
-const httpStatus = require('http-status')
+const httpStatus = require('http-status');
 const Client = require('../models/Client.model');
 
 module.exports.clientsController = {
@@ -37,12 +37,13 @@ module.exports.clientsController = {
       await client.save();
       return res.json(client);
     } catch (e) {
-      return res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: e.message });
+      return res
+        .status(httpStatus.SERVICE_UNAVAILABLE)
+        .json({ error: e.message });
     }
   },
 
   getAll: async (req, res) => {
-    console.log(1);
     try {
       const client = await Client.aggregate([
         {
@@ -117,7 +118,9 @@ module.exports.clientsController = {
         message: 'Клиент успешно удален',
       });
     } catch (e) {
-      return res.status(httpStatus.SERVICE_UNAVAILABLE).json({ error: e.message });
+      return res
+        .status(httpStatus.SERVICE_UNAVAILABLE)
+        .json({ error: e.message });
     }
   },
   editClient: async (req, res) => {
