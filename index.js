@@ -1,9 +1,11 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
+const path = require('path')
 const routes = require('./routes/index');
-require('dotenv').config();
+
 
 const { PORT, DB_URL } = process.env;
 
@@ -15,6 +17,10 @@ app.use(express.json());
 app.use(morgan('combined'));
 app.use(routes);
 
+app.use(express.static(path.resolve(__dirname, "client", "build")))
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "client", "build"))
+})
 async function start() {
   try {
     await mongoose.connect(DB_URL, {
